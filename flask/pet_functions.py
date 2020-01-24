@@ -2,6 +2,9 @@ import os
 import requests 
 import json
 import pandas as pd 
+import sklearn
+import pickle
+import numpy as np
 
 KEY = os.environ['PETFINDER_KEY']
 SECRET = os.environ['PETFINDER_SECRET']
@@ -25,12 +28,11 @@ def GetBearerToken(KEY,SECRET):
 	return new_header
 
 
-
 def GetTextResp(organization, header):
 	org = organization
 	type = 'dog'
 	page = 1
-	limit = 100
+	limit = 25
 	status = 'adoptable'
 
 	respdf = pd.DataFrame()
@@ -41,3 +43,32 @@ def GetTextResp(organization, header):
 	df = pd.io.json.json_normalize(animals)
 	respdf = respdf.append(df)
 	return respdf
+
+def CleanDirtyResp(df):
+	my_df = df 
+	my_df = my_df[['age','gender','size','name','id']]
+	my_df['City'] = 'Chicago' #FIXME
+	return my_df
+
+def GetPetmodPredict(df):
+	my_df = df 
+	X = my_df[['age','gender','size','City']]
+	cols_to_transform = ['age', 'gender', 'size','City']
+	X = pd.get_dummies(X, columns = cols_to_transform )
+	X['age_Baby'] = 0
+	X['age_Senior'] = 0
+	X['size_Small'] = 0
+	X['size_Extra Large'] = 0
+	X['City_StLouis'] = 0 
+	X['City_Indy'] = 0
+	filename = 'draft_pet_model.sav'
+	loaded_model = pickle.load(open(filename, 'rb'))
+	pred_ys = loaded_model.predict(X)
+	my_df['pred_ys'] = np.log(pred_ys)
+	return my_df
+
+
+
+
+
+
