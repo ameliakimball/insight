@@ -1,9 +1,15 @@
-
+import os
+import json
 from flask import render_template
 from flask import request 
 from flaskexample import app
 import pandas as pd
+import requests
+from pet_functions import GetBearerToken
+from pet_functions import GetTextResp
 
+KEY = os.environ['PETFINDER_KEY']
+SECRET = os.environ['PETFINDER_SECRET']
 
 @app.route('/')
 @app.route('/index')
@@ -18,7 +24,10 @@ def cesareans_input():
 
 @app.route('/output')
 def cesareans_output():
-  #pull 'shelter_id' from input field and store it
-  #patient = request.args.get('shelter_id')
-  mylist_of_dicts = [{'amelia':'The best', 'dogs':'alsogreat','cats':'less so'},{'amelia':'notsogreat', 'dogs':'alsogreat','cats':'less so'}]
-  return render_template("output.html", mylist_of_dicts = mylist_of_dicts)
+  shelter_id = request.args.get('shelter_id')
+  #FIXME right now shelterID is hard coded 
+  #shelter_id = 'NV16'
+  my_header = GetBearerToken(KEY = KEY, SECRET = SECRET)
+  df_to_display = GetTextResp(organization = shelter_id, header = my_header)
+   #pd.read_csv("sample_preddat.csv")
+  return render_template("output.html", mydf = df_to_display, my_range = range(0,10))

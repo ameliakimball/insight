@@ -68,7 +68,7 @@ preddat['pred_targ_hours'] = pred_targ_hours.tolist()
 
 #remember that the returned hours are normalized and log transformed!
 
-print(preddat.head())
+preddat.to_csv("sample_preddat.csv")
 
-
+print("I'm done")
 

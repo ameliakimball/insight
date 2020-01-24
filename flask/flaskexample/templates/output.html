@@ -51,7 +51,7 @@
       <form  action="/output" method="GET">
         <div class="form-group">
           <label for="shelter_id">Shelter ID:</label>
-          <input type="text" id="shelter_id" name='shelter_id' placeholder="e.g. NV117 ">
+          <input type="text" id="shelter_id" name='shelter_id' placeholder="e.g. NV17 ">
         </div>
         <div>
           <button type="submit" class="btn btn-default btn-lg">Get my list of dogs!</button>
@@ -66,16 +66,24 @@
     <div class="container">
       <div class="starter-template">
         <h3>Results:</h3>
-        <p class="lead">The list of dogs is below<br> This is placeholder text!</p>
+        <p class="lead">Your list of dogs is below<br> This is placeholder text!</p>
       </div>
 
       <table class="table table-hover">
-      <tr><th>amelia</th><th>Dogs</th><th>cats</th></tr>
-      {% for line in mylist_of_dicts %}
       <tr>
-      <td>{{mylist_of_dicts['amelia']}}</td>
-      <td>{{mylist_of_dicts[0]['dogs']}}</td>
-      <td> {{mylist_of_dicts[0]['cats'] }}</td>
+        <th>name</th>
+        <th>id</th>
+        <th>age</th>
+        <th>size</th>
+        <th>gender</th>
+      </tr>
+      {% for i in my_range %}
+      <tr>
+      <td>{{mydf['name'][i]}}</td>
+      <td>{{mydf['id'][i]}}</td>
+      <td>{{mydf['age'][i]}}</td>
+      <td>{{mydf['size'][i]}}</td>
+      <td> {{mydf['gender'][i] }}</td>
       </tr>
       {% endfor %}
       </table>
