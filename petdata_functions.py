@@ -1,3 +1,4 @@
+import pandas as pd
 
 def CleanPetData(df):
 	df = df.drop(['Unnamed: 0',
@@ -13,14 +14,9 @@ def CleanPetData(df):
                       'contact.address.postcode',
                       'contact.address.country',
                       'photos',
-                      'colors.primary',
-                      'colors.secondary',
-                      'colors.tertiary',
                       '_links.self.href',
                       '_links.type.href'], axis=1)
 	return df 
-
-
 
 def ReformatDates(df):
 	fmt ='%Y-%m-%dT%H:%M:%S+0000'
