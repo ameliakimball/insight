@@ -46,20 +46,24 @@
     <div class="container">
       <div class="starter-template">
         <h3>Results:</h3>
-        <p class="lead">Your list of dogs is below<br> </p>
-      </div>
+        <p class="lead">Below are the ten dogs with the lowest chance of being adopted in the next month. <br> For each dog, we provide their chance of being adopted in the next month in Denver, Chicago, and Minneapolis </p>
+      </div>  
 
       <table class="table table-hover">
       <tr>
         <th>Dog name</th>
         <th>Petfinder dog id</th>
-        <th>predicted length of stay (days)</th>
+        <th>Staying here: </th>
+        <th>Move to ElPaso: </th>
+        <th>Move to Minneapolis: </th>
       </tr>
       {% for i in my_range %}
       <tr>
       <td>{{mydf['name'][i]}}</td>
       <td>{{mydf['id'][i]}}</td>
-      <td> {{mydf['pred_ys'][i] }}</td>
+      <td> {{mydf['predicted_percent'][i] }}</td>
+      <td> {{mydf['predicted_percent_ElPaso'][i] }}</td>
+      <td> {{mydf['predicted_percent_Minne'][i] }}</td>
       </tr>
       {% endfor %}
       </table>

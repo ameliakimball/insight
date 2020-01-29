@@ -9,7 +9,7 @@ import numpy as np
 KEY = os.environ['PETFINDER_KEY']
 SECRET = os.environ['PETFINDER_SECRET']
 
-def GetBearerToken(KEY,SECRET):
+def get_bearer_token(KEY,SECRET):
 	data = {
 	'grant_type': 'client_credentials',
 	'client_id': KEY,
@@ -28,13 +28,12 @@ def GetBearerToken(KEY,SECRET):
 	return new_header
 
 
-def GetTextResp(organization, header):
+def get_text_resp(organization, header):
 	org = organization
 	type = 'dog'
 	page = 1
-	limit = 25
+	limit = 100
 	status = 'adoptable'
-
 	respdf = pd.DataFrame()
 	req_url = f'https://api.petfinder.com/v2/animals?type={type}&limit={limit}&page={page}&status={status}&organization={org}'
 	response = requests.get(req_url, headers = header)
@@ -44,29 +43,72 @@ def GetTextResp(organization, header):
 	respdf = respdf.append(df)
 	return respdf
 
-def CleanDirtyResp(df):
+def clean_dirty_resp(df):
 	my_df = df 
-	my_df = my_df[['age','gender','size','name','id']]
-	my_df['City'] = 'Chicago' #FIXME
+	my_df = my_df[['age','gender','size','coat','attributes.special_needs','name','id']]
+	#city should be here!
+	#other cleaning?
+	#uf the columns expected by the model don't exist, create them and fill them with zeros
 	return my_df
 
-def GetPetmodPredict(df):
-	my_df = df 
-	X = my_df[['age','gender','size','City']]
-	cols_to_transform = ['age', 'gender', 'size','City']
+
+
+def get_petmod_predict(df):
+	vars_of_interest =['age','size', 'coat','attributes.special_needs']
+	cols_to_transform = ['age','size', 'coat','attributes.special_needs']
+	my_df = df
+	X = my_df[vars_of_interest]
 	X = pd.get_dummies(X, columns = cols_to_transform )
-	X['age_Baby'] = 0
-	X['age_Senior'] = 0
-	X['size_Small'] = 0
-	X['size_Extra Large'] = 0
-	X['City_StLouis'] = 0 
-	X['City_Indy'] = 0
-	filename = 'draft_pet_model.sav'
-	loaded_model = pickle.load(open(filename, 'rb'))
-	pred_ys = loaded_model.predict(X)
-	my_df['pred_ys'] = np.log(pred_ys)
-	return my_df
+	X.insert(0, 'size_Extra Large', 0)
+	X.insert(0, 'coat_Hairless', 0)
+	X.insert(0, 'City_StLouis', 0)
+	X.insert(0, 'City_Indy', 0)
+	X.insert(0, 'City_Houston', 0)
+	X.insert(0, 'City_ElPaso', 0)
+	X.insert(0, 'City_Minne', 0)
+	X.insert(0, 'City_Denver', 0)
+	X.insert(0, 'City_Chicago', 1)#this should not be hard coded!  
 
+	filename = 'draft_logit_reg.sav'
+	loaded_model = pickle.load(open(filename, 'rb'))
+	pred_ys = loaded_model.predict_proba(X)
+	my_df['predicted_probability'] = pred_ys[:,1] 
+	my_df['predicted_percent'] = round(my_df['predicted_probability']*100)
+
+	X2 = my_df[['age','size', 'coat','attributes.special_needs']]
+	cols_to_transform = ['age','size', 'coat','attributes.special_needs']
+	X2 = pd.get_dummies(X2, columns = cols_to_transform )
+	X2.insert(0, 'size_Extra Large', 0)
+	X2.insert(0, 'coat_Hairless', 0)
+	X2.insert(0, 'City_StLouis', 0)
+	X2.insert(0, 'City_Indy', 0)
+	X2.insert(0, 'City_Houston', 0)
+	X2.insert(0, 'City_ElPaso', 1)
+	X2.insert(0, 'City_Minne', 0)
+	X2.insert(0, 'City_Denver', 0)
+	X2.insert(0, 'City_Chicago', 0)
+	pred_y2s = loaded_model.predict_proba(X2)
+	my_df['predicted_prob_ElPaso'] = pred_y2s[:,1] 
+	my_df['predicted_percent_ElPaso'] = round((my_df['predicted_prob_ElPaso']*100),0)
+
+	X3 = my_df[['age','size', 'coat','attributes.special_needs']]
+	cols_to_transform = ['age','size', 'coat','attributes.special_needs']
+	X3 = pd.get_dummies(X3, columns = cols_to_transform )
+	X3.insert(0, 'size_Extra Large', 0)
+	X3.insert(0, 'coat_Hairless', 0)
+	X3.insert(0, 'City_StLouis', 0)
+	X3.insert(0, 'City_Indy', 0)
+	X3.insert(0, 'City_Houston', 0)
+	X3.insert(0, 'City_ElPaso', 0)
+	X3.insert(0, 'City_Minne', 1)
+	X3.insert(0, 'City_Denver', 0)
+	X3.insert(0, 'City_Chicago', 0)
+	pred_y3s = loaded_model.predict_proba(X3)
+	my_df['predicted_prob_Minne'] = pred_y3s[:,1] 
+	my_df['predicted_percent_Minne'] = round(my_df['predicted_prob_Minne']*100)
+
+
+	return my_df
 
 
 
