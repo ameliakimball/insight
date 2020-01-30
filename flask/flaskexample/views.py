@@ -14,8 +14,8 @@ from pet_functions import one_hot_fill
 from pet_functions import get_petmod_predict
 
 
-KEY = os.environ['PETFINDER_KEY']
-SECRET = os.environ['PETFINDER_SECRET']
+KEY = os.environ['PETFINDER_KEY2']
+SECRET = os.environ['PETFINDER_SECRET2']
 
 @app.route('/')
 @app.route('/index')
@@ -34,7 +34,6 @@ def cesareans_output():
   my_header = get_bearer_token(KEY = KEY, SECRET = SECRET)
   dirty_df = get_text_resp(organization = shelter_id, header = my_header)
   clean_df = clean_dirty_resp(df= dirty_df, vars_of_interest =['age','size', 'coat','attributes.special_needs','name','id'])
-  
   coded_df = one_hot_fill(df = clean_df,
                           cols_in_mod = ['age_Adult', 'age_Baby', 'age_Senior', 
                           'age_Young', 'City_Chicago', 'City_Denver', 
@@ -48,7 +47,7 @@ def cesareans_output():
                           cols_to_transform = ['age','size', 'coat',
                           'attributes.special_needs'])
   predict_df = get_petmod_predict(coded_df = coded_df)
-  top_dogs = predict_df.nsmallest(10,'predicted_probability')
+  #top_dogs = predict_df.nsmallest(10,'predicted_probability')
   #new_df = predict_df.sort_values(by='predicted_percent', axis =0, inplace=True)
   #what if you enter a shelter with fewer than 10 dogs?
-  return render_template("output.html", my_df = top_dogs, my_range = range(0,20))
+  return render_template("output.html", my_df = predict_df, my_range = range(0,20))

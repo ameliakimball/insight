@@ -6,8 +6,8 @@ import sklearn
 import pickle
 import numpy as np
 
-KEY = os.environ['PETFINDER_KEY']
-SECRET = os.environ['PETFINDER_SECRET']
+KEY = os.environ['PETFINDER_KEY2']
+SECRET = os.environ['PETFINDER_SECRET2']
 
 def get_bearer_token(KEY,SECRET):
 	data = {
@@ -79,44 +79,45 @@ def get_petmod_predict(coded_df): #clean_df
 	coded_df['predicted_probability'] = pred_ys[:,1] 
 	coded_df['predicted_percent'] = round(coded_df['predicted_probability']*100)
 
-	# Denver = coded_df.drop(['name','id'],1)
-	# Denver['City_Chicago'] = 0
-	# Denver['City_StLouis'] = 0
-	# Denver['City_Indy'] = 0
-	# Denver['City_Houston'] = 0
-	# Denver['City_ElPaso'] = 0
-	# Denver['City_Denver'] = 1
-	# Denver['City_Minne'] = 0
-	# pred_y2s = loaded_model.predict_proba(Denver)
+	Denver = X
+	Denver['City_Chicago'] = 0
+	Denver['City_StLouis'] = 0
+	Denver['City_Indy'] = 0
+	Denver['City_Houston'] = 0
+	Denver['City_ElPaso'] = 0
+	Denver['City_Denver'] = 1
+	Denver['City_Minne'] = 0
+	pred_y2s = loaded_model.predict_proba(Denver)
 
-	# clean_df['predicted_prob_Denver'] = pred_y2s[:,1] 
-	# clean_df['predicted_percent_Denver'] = round((clean_df['predicted_prob_Denver']*100),0)
+	coded_df['predicted_prob_Denver'] = pred_y2s[:,1] 
+	coded_df['predicted_percent_Denver'] = round((coded_df['predicted_prob_Denver']*100),0)
 
-	# Minne = coded_df.drop(['name','id'],1)
-	# Minne['City_Chicago'] = 0
-	# Minne['City_StLouis'] = 0
-	# Minne['City_Indy'] = 0
-	# Minne['City_Houston'] = 0
-	# Minne['City_ElPaso'] = 0
-	# Minne['City_Minne'] = 1
-	# Minne['City_Minne'] = 0
-	# pred_y3s = loaded_model.predict_proba(Minne)
+	Minne = X
+	Minne['City_Chicago'] = 0
+	Minne['City_StLouis'] = 0
+	Minne['City_Indy'] = 0
+	Minne['City_Houston'] = 0
+	Minne['City_Denver'] = 0
+	Minne['City_ElPaso'] = 0
+	Minne['City_Minne'] = 1
 
-	# clean_df['predicted_prob_Minne'] = pred_y3s[:,1] 
-	# clean_df['predicted_percent_Minne'] = round((clean_df['predicted_prob_Minne']*100),0)
+	pred_y3s = loaded_model.predict_proba(Minne)
+
+	coded_df['predicted_prob_Minne'] = pred_y3s[:,1] 
+	coded_df['predicted_percent_Minne'] = round((coded_df['predicted_prob_Minne']*100),0)
 	
-	# Chicago= coded_df.drop(['name','id'],1)
-	# Chicago['City_Chicago'] = 1
-	# Chicago['City_StLouis'] = 0
-	# Chicago['City_Indy'] = 0
-	# Chicago['City_Houston'] = 0
-	# Chicago['City_ElPaso'] = 0
-	# Chicago['City_Minne'] = 0
-	# Chicago['City_Minne'] = 0
-	# pred_y4s = loaded_model.predict_proba(Chicago)
+	Chicago= X
+	Chicago['City_Chicago'] = 1
+	Chicago['City_StLouis'] = 0
+	Chicago['City_Indy'] = 0
+	Chicago['City_Houston'] = 0
+	Chicago['City_ElPaso'] = 0
+	Chicago['City_Minne'] = 0
+	Chicago['City_Minne'] = 0
+	pred_y4s = loaded_model.predict_proba(Chicago)
 
-	# clean_df['predicted_prob_Chicago'] = pred_y4s[:,1] 
-	# clean_df['predicted_percent_Chicago'] = round((clean_df['predicted_prob_Chicago']*100),0)
+	coded_df['predicted_prob_Chicago'] = pred_y4s[:,1] 
+	coded_df['predicted_percent_Chicago'] = round((coded_df['predicted_prob_Chicago']*100),0)
 
 	return coded_df
 

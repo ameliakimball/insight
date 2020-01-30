@@ -14,8 +14,8 @@ from pet_functions import one_hot_fill
 from pet_functions import get_petmod_predict
 
 
-KEY = os.environ['PETFINDER_KEY']
-SECRET = os.environ['PETFINDER_SECRET']
+KEY = os.environ['PETFINDER_KEY2']
+SECRET = os.environ['PETFINDER_SECRET2']
 
 shelter_id = 'nv36'
 my_header = get_bearer_token(KEY = KEY, SECRET = SECRET)

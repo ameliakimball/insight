@@ -54,12 +54,18 @@
         <th>Dog name</th>
         <th>Petfinder dog id</th>
         <th>Staying here: </th>
+        <th>Move to Denver: </th>
+        <th>Move to Minneapolis: </th>
+        <th>Move to Chicago: </th>
       </tr>
       {% for i in my_range %}
       <tr>
       <td>{{my_df['name'][i]}}</td>
       <td>{{my_df['id'][i]}}</td>
       <td>{{my_df['predicted_percent'][i]}}</td>
+      <td>{{my_df['predicted_percent_Denver'][i]}}</td>
+      <td>{{my_df['predicted_percent_Minne'][i]}}</td>
+      <td>{{my_df['predicted_percent_Chicago'][i]}}</td>
       </tr>
       {% endfor %}
       </table>
