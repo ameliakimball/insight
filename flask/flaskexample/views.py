@@ -34,6 +34,7 @@ def cesareans_output():
   my_header = get_bearer_token(KEY = KEY, SECRET = SECRET)
   dirty_df = get_text_resp(organization = shelter_id, header = my_header)
   clean_df = clean_dirty_resp(df= dirty_df, vars_of_interest =['age','size', 'coat','attributes.special_needs','name','id'])
+  
   coded_df = one_hot_fill(df = clean_df,
                           cols_in_mod = ['age_Adult', 'age_Baby', 'age_Senior', 
                           'age_Young', 'City_Chicago', 'City_Denver', 
@@ -46,9 +47,8 @@ def cesareans_output():
                           'attributes.special_needs_True'],
                           cols_to_transform = ['age','size', 'coat',
                           'attributes.special_needs'])
-  predict_df = get_petmod_predict(coded_df = coded_df,
-                                  clean_df = clean_df)
+  predict_df = get_petmod_predict(coded_df = coded_df)
   top_dogs = predict_df.nsmallest(10,'predicted_probability')
-  df_to_display = top_dogs.sort_values(by=['predicted_probability'])
+  #new_df = predict_df.sort_values(by='predicted_percent', axis =0, inplace=True)
   #what if you enter a shelter with fewer than 10 dogs?
-  return render_template("output.html", mydf = df_to_display, my_range = range(0,20))
+  return render_template("output.html", my_df = top_dogs, my_range = range(0,20))

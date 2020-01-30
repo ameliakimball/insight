@@ -71,41 +71,54 @@ def one_hot_fill(df, cols_in_mod, cols_to_transform):
 
 
 
-def get_petmod_predict(clean_df,coded_df):
-	my_df = clean_df
+def get_petmod_predict(coded_df): #clean_df
 	X = coded_df.drop(['name','id'],1)
 	filename = 'draft_logit_reg.sav'
 	loaded_model = pickle.load(open(filename, 'rb'))
 	pred_ys = loaded_model.predict_proba(X)
-	my_df['predicted_probability'] = pred_ys[:,1] 
-	my_df['predicted_percent'] = round(my_df['predicted_probability']*100)
+	coded_df['predicted_probability'] = pred_ys[:,1] 
+	coded_df['predicted_percent'] = round(coded_df['predicted_probability']*100)
 
-	ElPaso = coded_df.drop(['name','id'],1)
-	ElPaso['City_Chicago'] = 0
-	ElPaso['City_StLouis'] = 0
-	ElPaso['City_Indy'] = 0
-	ElPaso['City_Houston'] = 0
-	ElPaso['City_ElPaso'] = 1
-	ElPaso['City_Minne'] = 0
-	ElPaso['City_Minne'] = 0
-	pred_y2s = loaded_model.predict_proba(ElPaso)
+	# Denver = coded_df.drop(['name','id'],1)
+	# Denver['City_Chicago'] = 0
+	# Denver['City_StLouis'] = 0
+	# Denver['City_Indy'] = 0
+	# Denver['City_Houston'] = 0
+	# Denver['City_ElPaso'] = 0
+	# Denver['City_Denver'] = 1
+	# Denver['City_Minne'] = 0
+	# pred_y2s = loaded_model.predict_proba(Denver)
 
-	my_df['predicted_prob_ElPaso'] = pred_y2s[:,1] 
-	my_df['predicted_percent_ElPaso'] = round((my_df['predicted_prob_ElPaso']*100),0)
+	# clean_df['predicted_prob_Denver'] = pred_y2s[:,1] 
+	# clean_df['predicted_percent_Denver'] = round((clean_df['predicted_prob_Denver']*100),0)
 
-	Minne = coded_df.drop(['name','id'],1)
-	Minne['City_Chicago'] = 0
-	Minne['City_StLouis'] = 0
-	Minne['City_Indy'] = 0
-	Minne['City_Houston'] = 0
-	Minne['City_ElPaso'] = 0
-	Minne['City_Minne'] = 1
-	Minne['City_Minne'] = 0
-	pred_y3s = loaded_model.predict_proba(Minne)
+	# Minne = coded_df.drop(['name','id'],1)
+	# Minne['City_Chicago'] = 0
+	# Minne['City_StLouis'] = 0
+	# Minne['City_Indy'] = 0
+	# Minne['City_Houston'] = 0
+	# Minne['City_ElPaso'] = 0
+	# Minne['City_Minne'] = 1
+	# Minne['City_Minne'] = 0
+	# pred_y3s = loaded_model.predict_proba(Minne)
 
-	my_df['predicted_prob_Minne'] = pred_y3s[:,1] 
-	my_df['predicted_percent_Minne'] = round((my_df['predicted_prob_Minne']*100),0)
-	return my_df
+	# clean_df['predicted_prob_Minne'] = pred_y3s[:,1] 
+	# clean_df['predicted_percent_Minne'] = round((clean_df['predicted_prob_Minne']*100),0)
+	
+	# Chicago= coded_df.drop(['name','id'],1)
+	# Chicago['City_Chicago'] = 1
+	# Chicago['City_StLouis'] = 0
+	# Chicago['City_Indy'] = 0
+	# Chicago['City_Houston'] = 0
+	# Chicago['City_ElPaso'] = 0
+	# Chicago['City_Minne'] = 0
+	# Chicago['City_Minne'] = 0
+	# pred_y4s = loaded_model.predict_proba(Chicago)
+
+	# clean_df['predicted_prob_Chicago'] = pred_y4s[:,1] 
+	# clean_df['predicted_percent_Chicago'] = round((clean_df['predicted_prob_Chicago']*100),0)
+
+	return coded_df
 
 
 
