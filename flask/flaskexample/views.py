@@ -10,6 +10,7 @@ import requests
 from pet_functions import get_bearer_token
 from pet_functions import get_text_resp
 from pet_functions import clean_dirty_resp
+from pet_functions import one_hot_fill
 from pet_functions import get_petmod_predict
 
 
@@ -32,8 +33,21 @@ def cesareans_output():
   shelter_id = request.args.get('shelter_id')
   my_header = get_bearer_token(KEY = KEY, SECRET = SECRET)
   dirty_df = get_text_resp(organization = shelter_id, header = my_header)
-  clean_df = clean_dirty_resp(df= dirty_df)
-  predict_df = get_petmod_predict(df = clean_df)
+  clean_df = clean_dirty_resp(df= dirty_df, vars_of_interest =['age','size', 'coat','attributes.special_needs','name','id'])
+  coded_df = one_hot_fill(df = clean_df,
+                          cols_in_mod = ['age_Adult', 'age_Baby', 'age_Senior', 
+                          'age_Young', 'City_Chicago', 'City_Denver', 
+                          'City_ElPaso', 'City_Houston', 'City_Indy', 
+                          'City_Minne', 'City_StLouis', 'size_Extra Large',
+                          'size_Large', 'size_Medium', 'size_Small',
+                          'coat_Curly', 'coat_Hairless', 'coat_Long',
+                          'coat_Medium', 'coat_Short', 'coat_Wire',
+                          'attributes.special_needs_False',
+                          'attributes.special_needs_True'],
+                          cols_to_transform = ['age','size', 'coat',
+                          'attributes.special_needs'])
+  predict_df = get_petmod_predict(coded_df = coded_df,
+                                  clean_df = clean_df)
   top_dogs = predict_df.nsmallest(10,'predicted_percent')
   df_to_display = top_dogs.sort_values(by=['predicted_percent'])
   #what if you enter a shelter with fewer than 10 dogs?
