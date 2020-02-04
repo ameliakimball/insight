@@ -47,7 +47,7 @@ def cesareans_output():
                           cols_to_transform = ['age','size', 'coat',
                           'attributes.special_needs'])
   predict_df = get_petmod_predict(coded_df = coded_df)
-  #top_dogs = predict_df.nsmallest(10,'predicted_probability')
-  #new_df = predict_df.sort_values(by='predicted_percent', axis =0, inplace=True)
-  #what if you enter a shelter with fewer than 10 dogs?
-  return render_template("output.html", my_df = predict_df, my_range = range(0,20))
+  new_df = predict_df.sort_values(by='predicted_percent',ascending = True).reset_index(drop=True)
+  shelter_df = pd.read_csv('shelters.csv', sep= ';')
+  print(shelter_df)
+  return render_template("output.html", my_df = new_df, my_range = range(0,10),range2 = range(0,9), shelt_df =shelter_df)

@@ -41,12 +41,14 @@
 <br><br>
 
 
+
+
   </div> <!-- /.container-->
 
     <div class="container">
       <div class="starter-template">
         <h3>Results:</h3>
-        <p class="lead">Below are the ten dogs with the lowest chance of being adopted in the next month. <br> <br> For each dog, we provide their chance of being adopted in the next month in Denver, Chicago, and Minneapolis </p>
+        <p class="lead">Below are the ten dogs with the lowest percent chance of being adopted in one month. <br> <br> For each dog, we provide their percent chance of being adopted in one month in Denver, Minneapolis, and Chicago </p>
       </div>  
 
       <table class="table table-hover">
@@ -66,6 +68,33 @@
       <td>{{my_df['predicted_percent_Denver'][i]}}</td>
       <td>{{my_df['predicted_percent_Minne'][i]}}</td>
       <td>{{my_df['predicted_percent_Chicago'][i]}}</td>
+      </tr>
+      {% endfor %}
+      </table>
+     </div><!-- /.container -->
+
+
+  </div> <!-- /.container-->
+
+    <div class="container">
+      <div class="starter-template">
+        <h3>Potential Shelter Partners:</h3>
+        <p class="lead">Below are three shelters in each of the destination cities with the quickest adoption time </p>
+      </div>  
+
+      <table class="table table-hover">
+      <tr>
+        <th>City</th>
+        <th>Shelter Name</th>
+        <th>email</th>
+        <th>phone</th>
+      </tr>
+      {% for i in my_range %}
+      <tr>
+      <td>{{shelt_df['City'][i]}}</td>
+      <td>{{shelt_df['name'][i]}}</td>
+      <td>{{shelt_df['contact.email'][i]}}</td>
+      <td>{{shelt_df['contact.phone'][i]}}</td>
       </tr>
       {% endfor %}
       </table>

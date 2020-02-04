@@ -1,0 +1,46 @@
+
+slide 1 
+Animal shelters in north america collectively have a throughput of 3-5 millions animals per year. The cost of caring for a dog in a shelter can range from$200 $2000.  One important component of the price of housing is the length of stay.  
+Longer stays mean higher bills, and fewer open places for new dogs. 
+For their mission and their bottom line, shelters need to minimize the amount of time a dog stays
+Some types of dogs we know will be easy to adopt out quickly.   But what about the rest? Is there anything to be done for them?
+
+
+Slide 2
+One option that has become more popular is relocation to a place with higher demand. But moving animals is costly in terms of time and money, and shelters typically lack concrete information about the impact of a potential move. So those running a shelter are left wondering: would this dog be better off in a different location? If so, where?
+
+Slide 3/ webapp
+
+That’s exactly what sheltermatch provides. 
+
+So let’s say we’re the spaniel rescue of San Antonio, we put in our petfinder id, and sheltermatch returns the ten dogs at our shelter that are least likely to be adopted within one month, as well as how their chance of adoption would change in three other target locations.  So we can see here that for Money Penny making the move to Denver or even to Chicago might not make sense, but if there’s a relocation route available to minneapolis she is more than 20% more likely to be adopted within one month. 
+
+Of course not all shelters have connections in these target locations, so shelter match also provides a list of three shelters in each location that have quick times to adoption. 
+
+Slide 4 
+How does this work?  
+
+On the backend I curated a databased of adopted dogs by scraping the petfinder API over two weeks and storing those entries in a s database and then building a model in scikit-learn to predict the probability of adoption
+
+When the user inputs their shelter id, the site pings the petfinder API, returns the list of dogs at that shelter in this moment,  and calculates the likelihood of adoption for the dogs, both in their current location and in three specified target locations.  It then queries the database to get the mean length of stay for shelters in the three target locations, and returns the top three with the shortest length of stay. 
+
+Both the database and the webapp are designed to scale, and to respond dynamically to the updated dog lists, and to further entries of scraped data. 
+
+slide 5
+Database as it stands contains 150,000 dogs. Among the features included for each dog are the timestamp, and the timestamp when their status changed to “adopted”, allowing us to calculate the length of time to adoption. 
+
+I chose to focus on dogs whose time to adoption is more than a day, and less than a year, leaving me with 128,000 entries. 
+
+Slide 6 
+In this dataset we can get pretty far with just some common sense curation of the features, and if we  drop features that are uninformative, collinear, or not predictive of different adoption times we are Left with 9 key features that show variance across categories in time to adoption.   Including as we have already seen in the webapp, location. 
+
+Slide 7 
+In order to return a simple, actionable prediction I chose a cutoff of one month,  and created a binary target feature of before or after that one month cut off. 
+I used forward model selection to build a logistic regression that predicts this binary feature. 
+With an 80/20 train test split we see that even the minimal model of just age is doing pretty well with an f1 score of .74 and accuracy of 65%.  As we increase to a model including all the variables listed here I’m able to improve performance and we see a 13% increase in accuracy and an increase of .7 in the f1 score. 
+
+Slide 8 
+Overall what Sheltermatch gives us is a model with accurate predictions, in a scalable architecture, but  more importantly a direct answer to a shelter’s question: when it comes to the dogs in my care, what’s the quickest way home? 
+
+
+

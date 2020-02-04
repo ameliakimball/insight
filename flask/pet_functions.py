@@ -76,7 +76,7 @@ def get_petmod_predict(coded_df): #clean_df
 	filename = 'draft_logit_reg.sav'
 	loaded_model = pickle.load(open(filename, 'rb'))
 	pred_ys = loaded_model.predict_proba(X)
-	coded_df['predicted_probability'] = pred_ys[:,1] 
+	coded_df['predicted_probability'] = pred_ys[:,0] 
 	coded_df['predicted_percent'] = round(coded_df['predicted_probability']*100)
 
 	Denver = X
@@ -89,7 +89,7 @@ def get_petmod_predict(coded_df): #clean_df
 	Denver['City_Minne'] = 0
 	pred_y2s = loaded_model.predict_proba(Denver)
 
-	coded_df['predicted_prob_Denver'] = pred_y2s[:,1] 
+	coded_df['predicted_prob_Denver'] = pred_y2s[:,0] 
 	coded_df['predicted_percent_Denver'] = round((coded_df['predicted_prob_Denver']*100),0)
 
 	Minne = X
@@ -103,7 +103,7 @@ def get_petmod_predict(coded_df): #clean_df
 
 	pred_y3s = loaded_model.predict_proba(Minne)
 
-	coded_df['predicted_prob_Minne'] = pred_y3s[:,1] 
+	coded_df['predicted_prob_Minne'] = pred_y3s[:,0] 
 	coded_df['predicted_percent_Minne'] = round((coded_df['predicted_prob_Minne']*100),0)
 	
 	Chicago= X
@@ -116,7 +116,7 @@ def get_petmod_predict(coded_df): #clean_df
 	Chicago['City_Minne'] = 0
 	pred_y4s = loaded_model.predict_proba(Chicago)
 
-	coded_df['predicted_prob_Chicago'] = pred_y4s[:,1] 
+	coded_df['predicted_prob_Chicago'] = pred_y4s[:,0] 
 	coded_df['predicted_percent_Chicago'] = round((coded_df['predicted_prob_Chicago']*100),0)
 
 	return coded_df
